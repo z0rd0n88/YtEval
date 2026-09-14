@@ -1,0 +1,11 @@
+# Transcripts and media are working intermediates, never committed.
+**/transcripts/*
+*.vtt
+*.info.json
+*.fetch.log
+
+# Generated reports from local runs.
+docs/reports/
+
+__pycache__/
+*.pyc
