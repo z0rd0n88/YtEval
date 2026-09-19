@@ -1,6 +1,6 @@
 # yteval
 
-A [Claude Code](https://claude.com/claude-code) skill that turns YouTube videos into a
+A skill for [Claude Code](https://claude.com/claude-code), [Google Antigravity / Gemini](https://antigravity.google), and [OpenAI Codex](https://openai.com) that turns YouTube videos into a
 fact-checked writeup — or just their transcript.
 
 It does not summarize. It pulls out every statement a viewer could check and be proved
@@ -16,7 +16,7 @@ measured.
 
 | Tool | Required | Notes |
 |---|---|---|
-| Claude Code | yes | this is a skill, not a standalone CLI |
+| AI Assistant | yes | Claude Code, Google Antigravity / Gemini, or OpenAI Codex |
 | `yt-dlp` | yes | `pipx install yt-dlp` — captions only, never downloads audio or video |
 | `python3` | yes | standard library only, nothing to `pip install` |
 | `gh` | no | only for `--issues`, and only when authenticated |
@@ -27,21 +27,30 @@ measured.
 git clone https://github.com/z0rd0n88/YtEval.git && cd YtEval && ./install.sh
 ```
 
-That copies the skill to `~/.claude/skills/yteval/` and reports whether your dependencies
-are present. It installs nothing else and edits no settings file.
+By default, `./install.sh` installs the skill globally for all supported AI coding assistants:
+- **Claude Code**: `~/.claude/skills/yteval/`
+- **OpenAI Codex**: `~/.agents/skills/yteval/`
+- **Google Antigravity / Gemini**: `~/.gemini/config/skills/yteval/` (and CLI config)
 
-Other modes:
-
+You can also target specific platforms:
 ```bash
-./install.sh --project
+./install.sh --claude     # Claude Code only
+./install.sh --gemini     # Google Antigravity / Gemini only
+./install.sh --codex      # OpenAI Codex only
 ```
 
+Or install inside the current project workspace:
+```bash
+./install.sh --project    # installs into .claude/ and .agents/
+```
+
+To remove:
 ```bash
 ./install.sh --uninstall
 ```
 
-Then start Claude Code in whatever directory you want reports written to, and run
-`/yteval --help`.
+Then start your AI assistant in whatever directory you want reports written to, and run
+`/yteval --help` (or activate the `yteval` skill).
 
 ## Use it
 
@@ -109,7 +118,7 @@ the results quietly.
 ## Filing issues from findings (`--issues`)
 
 Off by default. When enabled it drafts issues, dedupes against the target repo's open
-*and closed* issues, checks them against that repo's `CLAUDE.md`, then shows you the whole
+*and closed* issues, checks them against that repo's `CLAUDE.md`, `AGENTS.md`, or `GEMINI.md`, then shows you the whole
 batch and waits. Nothing is filed without explicit approval, and approval never carries
 forward to the next run. The target repo has no default and is never inferred.
 

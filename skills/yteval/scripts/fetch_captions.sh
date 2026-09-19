@@ -37,14 +37,15 @@ for u in "$@"; do
     *playlist\?list=*) echo "usage: refusing playlist URL $u -- pass explicit video URLs" >&2; exit 2 ;;
   esac
 done
-mkdir -p "$OUTDIR"
+mkdir -p -- "$OUTDIR"
 
 video_id() {
   # Accept a bare 11-char ID, a watch URL, or a youtu.be short link.
+  # Sanitize against path traversal by only keeping valid characters.
   case "$1" in
-    *watch\?v=*) printf '%s' "${1#*watch?v=}" | cut -c1-11 ;;
-    *youtu.be/*) printf '%s' "${1##*youtu.be/}" | cut -c1-11 ;;
-    *)           printf '%s' "$1" | cut -c1-11 ;;
+    *watch\?v=*) printf '%s' "${1#*watch?v=}" | tr -cd 'A-Za-z0-9_-' | cut -c1-11 ;;
+    *youtu.be/*) printf '%s' "${1##*youtu.be/}" | tr -cd 'A-Za-z0-9_-' | cut -c1-11 ;;
+    *)           printf '%s' "$1" | tr -cd 'A-Za-z0-9_-' | cut -c1-11 ;;
   esac
 }
 
@@ -109,7 +110,7 @@ fetch_one() {
   echo "ok $id $chosen"
 }
 
-cd "$OUTDIR" || exit 2
+cd -- "$OUTDIR" || exit 2
 OUTDIR=.
 
 running=0

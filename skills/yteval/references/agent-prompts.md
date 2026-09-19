@@ -42,10 +42,10 @@ Runs as one call on the session model. Everything downstream verifies only what 
 passes through, and no later stage can detect a claim that never arrived — which is why
 this one does not get a cheaper model.
 
-## Breadth verifier (stage 6) — `model: "sonnet"`
+## Breadth verifier (stage 6) — fast/cost-effective tier (Claude Code: `model: "sonnet"`, Gemini: `model: "flash"`, Codex: default)
 
 **Do not compose this prompt. Copy `prompts/breadth.md` into the run directory
-verbatim.** ~10 claims per agent, one vote each.
+verbatim.** When invoking a subagent, you must explicitly read this file and pass its entire contents into the API's `Prompt` parameter, or the subagent will spawn starved of instructions. ~10 claims per agent, one vote each.
 
 The shipped file is the source of truth, and the reason it is shipped rather than
 described is that describing it failed. A session working from prose guidance wrote *"you
@@ -58,10 +58,10 @@ one.
 Corpus-specific context (dates spanned, subject matter, what repetition to expect) belongs
 in each agent's individual task message, never in an edit to the copied prompt.
 
-## Depth verifier (stage 7) — `model: "sonnet"`, `prompts/depth.md`
+## Depth verifier (stage 7) — adversarial tier (Claude Code: `model: "sonnet"`, Gemini: `model: "pro"`, Codex: default), `prompts/depth.md`
 
 Task message supplies: one claim with its verbatim quote and attributions, the
-`upload_date` **from run state**, and the output path. Three agents per claim, dispatched
+`upload_date` **from run state**, and the output path. When invoking a subagent, explicitly read `prompts/depth.md` and pass its entire contents into the API's `Prompt` parameter. Three agents per claim, dispatched
 independently; 2 of 3 refutations sink it.
 
 Pass `upload_date` from run state, not from the extraction agent's echoed copy. A
